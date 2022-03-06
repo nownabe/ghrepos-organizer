@@ -1,1 +1,1 @@
-# repos_organizer
+# ghrepos-organizer
