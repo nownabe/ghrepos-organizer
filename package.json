@@ -1,0 +1,30 @@
+{
+  "name": "ghrepos-organizer",
+  "version": "0.0.1",
+  "description": "Organize GitHub repositories",
+  "main": "dist/index.js",
+  "bin": {
+    "ghrepos-organizer": "bin/ghrepos-organizer.js"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nownabe/ghrepos-organizer.git"
+  },
+  "author": "nownabe",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/nownabe/ghrepos-organizer/issues"
+  },
+  "homepage": "https://github.com/nownabe/ghrepos-organizer#readme",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^8.3.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.69.1",
+    "typescript": "^4.6.2"
+  }
+}
