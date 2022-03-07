@@ -1,0 +1,30 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base", ":prHourlyLimitNone"],
+  "dependencyDashboard": true,
+  "labels": ["renovate"],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["pin"],
+      "automerge": true
+    },
+    {
+      "matchFiles": ["package.json"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "stabilityDays": 3
+    },
+    {
+      "matchFiles": ["package.json"],
+      "matchUpdateTypes": ["minor"],
+      "automerge": true,
+      "stabilityDays": 7
+    },
+    {
+      "matchFiles": ["package.json"],
+      "matchUpdateTypes": ["major"],
+      "stabilityDays": 14,
+      "assigneesFromCodeOwners": true
+    }
+  ]
+}
