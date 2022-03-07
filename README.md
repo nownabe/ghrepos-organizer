@@ -2,7 +2,8 @@
 
 ghrepos-organizer organizes your GitHub repositories in a batch.
 
-TODO: video
+https://user-images.githubusercontent.com/1286807/157036453-9383534d-27ce-4ba0-8dca-39e3d5729565.mp4
+
 
 ## Usage
 
