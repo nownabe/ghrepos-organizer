@@ -167,4 +167,6 @@ export const run = async () => {
   }
 
   await organize(actions, repos);
+
+  console.log("\n🎉 Completed!");
 };
