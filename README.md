@@ -14,6 +14,7 @@ You can use some environment variables to configure ghrepos-organizer.
 
 - `GH_PAT`: Your personal access token.
 - `CONCURRENCY`: Concurrency.
+- `ENABLE_DELETE`: Enable delete action.
 
 ## Actions
 

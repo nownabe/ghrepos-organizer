@@ -9,6 +9,7 @@ import actionBuilders from "./actions";
 Spinner.setDefaultSpinnerString("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏");
 
 const concurrency = parseInt(process.env.CONCURRENCY) || 5;
+const enabledDeletion = process.env.ENABLE_DELETE === "true";
 
 const patPrompt = async (): Promise<string> => {
   const result = await inquirer.prompt([
@@ -31,6 +32,29 @@ const actionsPrompt = async (octokit: Octokit): Promise<Actions> => {
     actions: ActionName[];
   };
 
+  const choices = [
+    {
+      name: "Close all issues",
+      value: "closeIssues",
+    },
+    {
+      name: "Close all pull requests",
+      value: "closePullRequests",
+    },
+    {
+      name: "Update repository (visibility, archive, etc.)",
+      value: "update",
+    },
+    {
+      name: "Transfer repository",
+      value: "transfer",
+    },
+  ];
+
+  if (process.env.ENABLE_DELETE === "true") {
+    choices.unshift({ name: "Delete repository", value: "delete" });
+  }
+
   const result = await inquirer.prompt<Result>([
     {
       type: "input",
@@ -42,28 +66,7 @@ const actionsPrompt = async (octokit: Octokit): Promise<Actions> => {
       type: "checkbox",
       name: "actions",
       message: "Choose actions.",
-      choices: [
-        {
-          name: "Delete repository",
-          value: "delete",
-        },
-        {
-          name: "Close all issues",
-          value: "closeIssues",
-        },
-        {
-          name: "Close all pull requests",
-          value: "closePullRequests",
-        },
-        {
-          name: "Update repository (visibility, archive, etc.)",
-          value: "update",
-        },
-        {
-          name: "Transfer repository",
-          value: "transfer",
-        },
-      ],
+      choices: choices,
     },
   ]);
 
