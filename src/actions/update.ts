@@ -30,7 +30,7 @@ const builder: ActionBuilder = async (octokit) => {
     {
       type: "checkbox",
       name: "parametersToChange",
-      message: "Choose parameters to change.",
+      message: "Choose parameters to update.",
       choices: parameters,
       loop: false,
     },
