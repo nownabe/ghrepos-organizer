@@ -13,14 +13,14 @@ const concurrency = parseInt(process.env.CONCURRENCY) || 5;
 const patPrompt = async (): Promise<string> => {
   const result = await inquirer.prompt([
     {
-      type: "input",
+      type: "password",
       name: "pat",
       message: "GitHub Personal Access Token:",
-      default: process.env.GH_PAT,
+      when: !process.env.GH_PAT,
     },
   ]);
 
-  return result.pat;
+  return result.pat || process.env.GH_PAT;
 };
 
 const actionsPrompt = async (octokit: Octokit): Promise<Actions> => {
