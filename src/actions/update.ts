@@ -11,11 +11,10 @@ type Parameter =
 
 type UpdateOptions = {
   parametersToChange: Parameter[];
-  visibility: "public" | "private" | null;
+  visibility: "public" | "private";
   has_projects: boolean;
   has_wiki: boolean;
   delete_branch_on_merge: boolean;
-  archived: boolean;
 };
 
 const parameters: Parameter[] = [
@@ -66,17 +65,15 @@ const builder: ActionBuilder = async (octokit) => {
       when: (current) =>
         current.parametersToChange.includes("delete_branch_on_merge"),
     },
-    {
-      type: "confirm",
-      name: "archived",
-      message: "Archive?",
-      default: false,
-      when: (current) => current.parametersToChange.includes("archived"),
-    },
   ]);
 
   return async (repo, updateText) => {
     if (options.parametersToChange.length === 0) {
+      return;
+    }
+
+    // archived repos are read-only
+    if (repo.archived) {
       return;
     }
 
@@ -86,7 +83,11 @@ const builder: ActionBuilder = async (octokit) => {
 
     parameters.forEach((p) => {
       if (options.parametersToChange.includes(p)) {
-        params[p] = options[p];
+        if (p === "archived") {
+          params[p] = true;
+        } else {
+          params[p] = options[p];
+        }
       }
     });
 
