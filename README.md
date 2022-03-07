@@ -28,3 +28,8 @@ You can use some environment variables to configure ghrepos-organizer.
   - Enable/disable automatically branch deletion on pull requests
   - Archive
 - Transfer chosen repositories to a specified destination repository
+
+## Personal Access Token
+
+ghrepos-organizer requires your personal access token, selecting `repo` scope.
+If you want to delete repositories, `delete_repo` scope is also needed.
