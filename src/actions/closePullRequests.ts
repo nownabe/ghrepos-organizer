@@ -2,7 +2,12 @@ import type { ActionBuilder } from ".";
 
 const builder: ActionBuilder = async (octokit) => {
   return async (repo, updateText) => {
+    if (repo.archived) {
+      return;
+    }
+
     updateText("closing pull requests");
+
     const pulls = await octokit.paginate("GET /repos/{owner}/{repo}/pulls", {
       owner: repo.owner.login,
       repo: repo.name,

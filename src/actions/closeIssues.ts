@@ -2,7 +2,12 @@ import type { ActionBuilder } from ".";
 
 const builder: ActionBuilder = async (octokit) => {
   return async (repo, updateText) => {
+    if (repo.archived) {
+      return;
+    }
+
     updateText("closing issues");
+
     const issues = await octokit.paginate("GET /repos/{owner}/{repo}/issues", {
       owner: repo.owner.login,
       repo: repo.name,
