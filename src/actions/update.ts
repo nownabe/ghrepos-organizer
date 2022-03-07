@@ -83,6 +83,10 @@ const builder: ActionBuilder = async (octokit) => {
 
     parameters.forEach((p) => {
       if (options.parametersToChange.includes(p)) {
+        if (p === "visibility" && repo.visibility === options.visibility) {
+          return;
+        }
+
         if (p === "archived") {
           params[p] = true;
         } else {
