@@ -45,7 +45,7 @@ const actionsPrompt = async (octokit: Octokit): Promise<Actions> => {
       choices: [
         {
           name: "Delete repository",
-          value: "deleteRepo",
+          value: "delete",
         },
         {
           name: "Close all issues",
@@ -67,8 +67,8 @@ const actionsPrompt = async (octokit: Octokit): Promise<Actions> => {
     },
   ]);
 
-  if (result.actions.includes("deleteRepo")) {
-    result.actions = ["deleteRepo"];
+  if (result.actions.includes("delete")) {
+    result.actions = ["delete"];
   }
 
   const actions: Action[] = [];

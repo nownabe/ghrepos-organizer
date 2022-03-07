@@ -2,7 +2,7 @@ import { Octokit } from "@octokit/rest";
 
 import closeIssues from "./closeIssues";
 import closePullRequests from "./closePullRequests";
-import deleteRepo from "./deleteRepo";
+import deleteRepo from "./delete";
 import transfer from "./transfer";
 import update from "./update";
 
@@ -32,7 +32,7 @@ export type Actions = {
 const actionBuilders = {
   closeIssues,
   closePullRequests,
-  deleteRepo,
+  delete: deleteRepo,
   transfer,
   update,
 };
