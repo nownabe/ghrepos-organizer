@@ -13,7 +13,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean && rollup -c",
-    "dev": "npm run build && bin/ghrepos-organizer",
+    "dev": "npm run build && bin/ghrepos-organizer.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
