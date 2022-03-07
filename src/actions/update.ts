@@ -25,13 +25,36 @@ const parameters: Parameter[] = [
   "archived",
 ];
 
+const parameterChoices = [
+  {
+    name: "Visibility (public or private)",
+    value: "visibility",
+  },
+  {
+    name: "Projects feature (enable or disable)",
+    value: "has_projects",
+  },
+  {
+    name: "Wiki feature (enable or disable)",
+    value: "has_wiki",
+  },
+  {
+    name: "Automatically delete branches on merge (enable or disable)",
+    value: "delete_branch_on_merge",
+  },
+  {
+    name: "Archive",
+    value: "archived",
+  },
+];
+
 const builder: ActionBuilder = async (octokit) => {
   const options = await inquirer.prompt<UpdateOptions>([
     {
       type: "checkbox",
       name: "parametersToChange",
       message: "Choose parameters to update.",
-      choices: parameters,
+      choices: parameterChoices,
       loop: false,
     },
     {
@@ -44,23 +67,35 @@ const builder: ActionBuilder = async (octokit) => {
       when: (current) => current.parametersToChange.includes("visibility"),
     },
     {
-      type: "confirm",
+      type: "list",
       name: "has_projects",
-      message: "Enable projects?",
+      message: "Projects feature",
+      choices: [
+        { name: "Enable", value: true },
+        { name: "Disable", value: false },
+      ],
       default: false,
       when: (current) => current.parametersToChange.includes("has_projects"),
     },
     {
-      type: "confirm",
+      type: "list",
       name: "has_wiki",
-      message: "Enable wiki?",
+      message: "Wiki feature",
+      choices: [
+        { name: "Enable", value: true },
+        { name: "Disable", value: false },
+      ],
       default: false,
       when: (current) => current.parametersToChange.includes("has_wiki"),
     },
     {
-      type: "confirm",
+      type: "list",
       name: "delete_branch_on_merge",
-      message: "Automatically delete head branches?",
+      message: "Automatically delete branches on merge",
+      choices: [
+        { name: "Enable", value: true },
+        { name: "Disable", value: false },
+      ],
       default: true,
       when: (current) =>
         current.parametersToChange.includes("delete_branch_on_merge"),
