@@ -35,23 +35,31 @@ const actionsPrompt = async (octokit: Octokit): Promise<Actions> => {
     {
       name: "Close all issues",
       value: "closeIssues",
+      short: "Close issues",
     },
     {
       name: "Close all pull requests",
       value: "closePullRequests",
+      short: "Close pull requests",
     },
     {
       name: "Update repository (visibility, archive, etc.)",
       value: "update",
+      short: "Update",
     },
     {
       name: "Transfer repository",
       value: "transfer",
+      short: "Transfer",
     },
   ];
 
   if (process.env.ENABLE_DELETE === "true") {
-    choices.unshift({ name: "Delete repository", value: "delete" });
+    choices.unshift({
+      name: "Delete repository",
+      value: "delete",
+      short: "Delete",
+    });
   }
 
   const result = await inquirer.prompt<Result>([
@@ -123,6 +131,7 @@ const reposPrompt = async (candidates: Repo[]): Promise<Repo[]> => {
       choices: candidates.map((c) => ({
         name: ` ${c.full_name}\t(star: ${c.stargazers_count}, open issues: ${c.open_issues_count})`,
         value: c,
+        short: c.name,
       })),
       pageSize: 30,
     },

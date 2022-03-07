@@ -29,22 +29,27 @@ const parameterChoices = [
   {
     name: "Visibility (public or private)",
     value: "visibility",
+    short: "Visibility",
   },
   {
     name: "Projects feature (enable or disable)",
     value: "has_projects",
+    short: "Projects",
   },
   {
     name: "Wiki feature (enable or disable)",
     value: "has_wiki",
+    short: "Wiki",
   },
   {
     name: "Automatically delete branches on merge (enable or disable)",
     value: "delete_branch_on_merge",
+    short: "Delete branches",
   },
   {
     name: "Archive",
     value: "archived",
+    short: "Archive",
   },
 ];
 
