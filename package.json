@@ -1,7 +1,11 @@
 {
   "name": "ghrepos-organizer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Organize GitHub repositories",
+  "keywords": [
+    "github",
+    "cli"
+  ],
   "main": "dist/index.js",
   "bin": {
     "ghrepos-organizer": "bin/ghrepos-organizer.js"
