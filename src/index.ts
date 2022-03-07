@@ -9,7 +9,6 @@ import actionBuilders from "./actions";
 Spinner.setDefaultSpinnerString("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏");
 
 const concurrency = parseInt(process.env.CONCURRENCY) || 5;
-const enabledDeletion = process.env.ENABLE_DELETE === "true";
 
 const patPrompt = async (): Promise<string> => {
   const result = await inquirer.prompt([
