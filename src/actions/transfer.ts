@@ -18,10 +18,14 @@ const builder: ActionBuilder = async (octokit) => {
     },
   ]);
 
-  return async (repo) => {
-    const sleep = () =>
-      new Promise<void>((resolve) => setTimeout(() => resolve(), 1000));
-    await sleep();
+  return async (repo, updateText) => {
+    updateText("transfering repository");
+
+    await octokit.request("POST /repos/{owner}/{repo}/transfer", {
+      owner: repo.owner.login,
+      repo: repo.name,
+      new_owner: options.destination,
+    });
   };
 };
 
