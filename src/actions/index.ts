@@ -14,6 +14,9 @@ export interface Repo {
   owner: {
     login: string;
   };
+  forks_count?: number;
+  stargazers_count?: number;
+  open_issues_count?: number;
 }
 
 export type Action = (

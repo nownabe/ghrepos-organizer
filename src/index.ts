@@ -119,7 +119,7 @@ const reposPrompt = async (candidates: Repo[]): Promise<Repo[]> => {
       name: "repositories",
       message: "Choose repositories you want to organize.",
       choices: candidates.map((c) => ({
-        name: c.full_name,
+        name: ` ${c.full_name}\t(star: ${c.stargazers_count}, open issues: ${c.open_issues_count})`,
         value: c,
       })),
       pageSize: 30,
