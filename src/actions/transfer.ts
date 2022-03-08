@@ -19,6 +19,9 @@ const builder: ActionBuilder = async (octokit) => {
   ]);
 
   return async (repo, updateText) => {
+    if (repo.fork && repo.visibility === "private") {
+      return;
+    }
     updateText("transfering repository");
 
     await octokit.request("POST /repos/{owner}/{repo}/transfer", {
