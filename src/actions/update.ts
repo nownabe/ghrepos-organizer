@@ -123,7 +123,10 @@ const builder: ActionBuilder = async (octokit) => {
 
     parameters.forEach((p) => {
       if (options.parametersToChange.includes(p)) {
-        if (p === "visibility" && repo.visibility === options.visibility) {
+        if (
+          p === "visibility" &&
+          (repo.visibility === options.visibility || repo.fork)
+        ) {
           return;
         }
 
