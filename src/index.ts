@@ -122,17 +122,28 @@ const getCandidates = async (
   return repos;
 };
 
+const forkSymbol = ` [fork]`;
+
 const reposPrompt = async (candidates: Repo[]): Promise<Repo[]> => {
+  const indent =
+    Math.max(...candidates.map((repo) => repo.full_name.length)) +
+    forkSymbol.length +
+    1;
   const result = await inquirer.prompt<{ repositories: Repo[] }>([
     {
       type: "checkbox",
       name: "repositories",
       message: "Choose repositories you want to organize.",
-      choices: candidates.map((c) => ({
-        name: ` ${c.full_name}\t(star: ${c.stargazers_count}, open issues: ${c.open_issues_count})`,
-        value: c,
-        short: c.name,
-      })),
+      choices: candidates.map((c) => {
+        const base = ` ${c.full_name}${c.fork ? forkSymbol : ""}`;
+        const space = " ".repeat(indent - base.length);
+        const counts = `(star: ${c.stargazers_count}, open: ${c.open_issues_count})`;
+        return {
+          name: ` ${base}${space}${counts}`,
+          value: c,
+          short: c.name,
+        };
+      }),
       pageSize: 30,
     },
   ]);
