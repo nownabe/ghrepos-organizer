@@ -140,6 +140,18 @@ const reposPrompt = async (candidates: Repo[]): Promise<Repo[]> => {
   return result.repositories;
 };
 
+const confirmPrompt = async () => {
+  const result = await inquirer.prompt<{ confirm: boolean }>([
+    {
+      type: "confirm",
+      name: "confirm",
+      message: "Are you sure?",
+      default: false,
+    },
+  ]);
+  return result.confirm;
+};
+
 const organize = async (actions: Actions, repos: Repo[]) => {
   const tasks = new Listr(
     repos.map((repo) => ({
@@ -174,6 +186,11 @@ export const run = async () => {
 
   const repos = await reposPrompt(candidates);
   if (repos.length === 0) {
+    return;
+  }
+
+  if (!(await confirmPrompt())) {
+    console.log("Canceled.");
     return;
   }
 
