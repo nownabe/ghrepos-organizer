@@ -50,7 +50,7 @@ const buildQuestions = (user: string): inquirer.QuestionCollection<Result> => [
     type: "checkbox",
     name: "actions",
     message: "Choose actions.",
-    choices: choices,
+    choices,
   },
 ];
 
