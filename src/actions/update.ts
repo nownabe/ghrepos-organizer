@@ -53,59 +53,50 @@ const parameterChoices = [
   },
 ];
 
+const booleanQuestion = (
+  name: string,
+  message: string,
+  defaultValue: boolean
+) => ({
+  type: "list",
+  name,
+  message,
+  choices: [
+    { name: "Enable", value: true },
+    { name: "Disable", value: false },
+  ],
+  default: defaultValue,
+  when: (current) => current.parametersToChange.includes(name),
+});
+
+const questions: inquirer.QuestionCollection<UpdateOptions> = [
+  {
+    type: "checkbox",
+    name: "parametersToChange",
+    message: "Choose parameters to update.",
+    choices: parameterChoices,
+    loop: false,
+  },
+  {
+    type: "list",
+    name: "visibility",
+    message: "Choose visibility.",
+    choices: ["public", "private"],
+    default: "private",
+    loop: false,
+    when: (current) => current.parametersToChange.includes("visibility"),
+  },
+  booleanQuestion("has_projects", "Projects feature", false),
+  booleanQuestion("has_wiki", "Wiki feature", false),
+  booleanQuestion(
+    "delete_branch_on_merge",
+    "Automatically delete branches on merge",
+    true
+  ),
+];
+
 const builder: ActionBuilder = async (octokit) => {
-  const options = await inquirer.prompt<UpdateOptions>([
-    {
-      type: "checkbox",
-      name: "parametersToChange",
-      message: "Choose parameters to update.",
-      choices: parameterChoices,
-      loop: false,
-    },
-    {
-      type: "list",
-      name: "visibility",
-      message: "Choose visibility.",
-      choices: ["public", "private"],
-      default: "private",
-      loop: false,
-      when: (current) => current.parametersToChange.includes("visibility"),
-    },
-    {
-      type: "list",
-      name: "has_projects",
-      message: "Projects feature",
-      choices: [
-        { name: "Enable", value: true },
-        { name: "Disable", value: false },
-      ],
-      default: false,
-      when: (current) => current.parametersToChange.includes("has_projects"),
-    },
-    {
-      type: "list",
-      name: "has_wiki",
-      message: "Wiki feature",
-      choices: [
-        { name: "Enable", value: true },
-        { name: "Disable", value: false },
-      ],
-      default: false,
-      when: (current) => current.parametersToChange.includes("has_wiki"),
-    },
-    {
-      type: "list",
-      name: "delete_branch_on_merge",
-      message: "Automatically delete branches on merge",
-      choices: [
-        { name: "Enable", value: true },
-        { name: "Disable", value: false },
-      ],
-      default: true,
-      when: (current) =>
-        current.parametersToChange.includes("delete_branch_on_merge"),
-    },
-  ]);
+  const options = await inquirer.prompt<UpdateOptions>(questions);
 
   return async (repo, updateText) => {
     if (options.parametersToChange.length === 0) {
