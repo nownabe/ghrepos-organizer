@@ -3,8 +3,8 @@ import { Spinner } from "cli-spinner";
 import inquirer from "inquirer";
 import { Listr } from "listr2";
 
-import type { Action, ActionName, Actions, Repo } from "./actions/index";
-import actionBuilders from "./actions";
+import type { Actions, Repo } from "./actions/index";
+import actionsPrompt from "./prompts/actions";
 
 Spinner.setDefaultSpinnerString("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏");
 
@@ -21,79 +21,6 @@ const patPrompt = async (): Promise<string> => {
   ]);
 
   return result.pat || process.env.GH_PAT;
-};
-
-const actionsPrompt = async (octokit: Octokit): Promise<Actions> => {
-  const user = (await octokit.request("GET /user")).data.login;
-
-  type Result = {
-    targetOwner: string;
-    actions: ActionName[];
-  };
-
-  const choices = [
-    {
-      name: "Close all issues",
-      value: "closeIssues",
-      short: "Close issues",
-    },
-    {
-      name: "Close all pull requests",
-      value: "closePullRequests",
-      short: "Close pull requests",
-    },
-    {
-      name: "Update repository (visibility, archive, etc.)",
-      value: "update",
-      short: "Update",
-    },
-    {
-      name: "Transfer repository",
-      value: "transfer",
-      short: "Transfer",
-    },
-  ];
-
-  if (process.env.ENABLE_DELETE === "true") {
-    choices.unshift({
-      name: "Delete repository",
-      value: "delete",
-      short: "Delete",
-    });
-  }
-
-  const result = await inquirer.prompt<Result>([
-    {
-      type: "input",
-      name: "targetOwner",
-      message: "Which organization do you want to organize?",
-      default: user,
-    },
-    {
-      type: "checkbox",
-      name: "actions",
-      message: "Choose actions.",
-      choices: choices,
-    },
-  ]);
-
-  if (result.actions.includes("delete")) {
-    result.actions = ["delete"];
-  }
-
-  const actions: Action[] = [];
-
-  for (const name of result.actions) {
-    const builder = actionBuilders[name];
-    const action = await builder(octokit);
-    actions.push(action);
-  }
-
-  return {
-    targetOwner: result.targetOwner,
-    isOwnerUser: user === result.targetOwner,
-    actions,
-  };
 };
 
 const getCandidates = async (
@@ -122,7 +49,7 @@ const getCandidates = async (
   return repos;
 };
 
-const forkSymbol = ` [fork]`;
+const forkSymbol = " [fork]";
 
 const reposPrompt = async (candidates: Repo[]): Promise<Repo[]> => {
   const indent =
@@ -181,6 +108,15 @@ const organize = async (actions: Actions, repos: Repo[]) => {
   await tasks.run();
 };
 
+const getRepos = async (octokit: Octokit, actions: Actions) => {
+  const candidates = await getCandidates(octokit, actions);
+  if (candidates.length === 0) {
+    return [];
+  }
+
+  return await reposPrompt(candidates);
+};
+
 export const run = async () => {
   const pat = await patPrompt();
   const octokit = new Octokit({ auth: pat });
@@ -190,12 +126,7 @@ export const run = async () => {
     return;
   }
 
-  const candidates = await getCandidates(octokit, actions);
-  if (candidates.length === 0) {
-    return;
-  }
-
-  const repos = await reposPrompt(candidates);
+  const repos = await getRepos(octokit, actions);
   if (repos.length === 0) {
     return;
   }
