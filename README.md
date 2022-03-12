@@ -1,9 +1,13 @@
 # ghrepos-organizer
 
+[![npm](https://img.shields.io/npm/v/ghrepos-organizer)](https://www.npmjs.com/package/ghrepos-organizer)
+[![GitHub](https://img.shields.io/github/license/nownabe/ghrepos-organizer)](https://github.com/nownabe/ghrepos-organizer/blob/main/LICENSE)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5efa494bbcd14a24be0926564394f621)](https://www.codacy.com/gh/nownabe/ghrepos-organizer/dashboard?utm_source=github.com&utm_medium=referral&utm_content=nownabe/ghrepos-organizer&utm_campaign=Badge_Grade)
+[![Maintainability](https://api.codeclimate.com/v1/badges/b52e422153bb830c8111/maintainability)](https://codeclimate.com/github/nownabe/ghrepos-organizer/maintainability)
+
 ghrepos-organizer organizes your GitHub repositories in a batch.
 
 https://user-images.githubusercontent.com/1286807/157036453-9383534d-27ce-4ba0-8dca-39e3d5729565.mp4
-
 
 ## Usage
 
