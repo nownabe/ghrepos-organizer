@@ -96,7 +96,7 @@ const filterPrompt = async (): Promise<FilterFunc> => {
   ]);
 
   if (!useFilter.useFilter) {
-    return (_repo: Repo) => true;
+    return () => true;
   }
 
   const filter = await inquirer.prompt<Filter>(filterQuestions);
