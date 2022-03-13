@@ -146,23 +146,32 @@ const getCandidates = async (
 };
 
 const forkSymbol = " [fork]";
+const repoText = (repo: Repo, indent: number) => {
+  const base = ` ${repo.full_name}${repo.fork ? forkSymbol : ""}`;
+  const space = " ".repeat(indent - base.length);
+  const supplement = `(${
+    repo.visibility === "public" ? "public,  " : "private, "
+  }star: ${repo.stargazers_count}, open: ${repo.open_issues_count}${
+    repo.archived ? ", archived" : ""
+  })`;
+
+  return ` ${base}${space}${supplement}`;
+};
 
 const chooseReposPrompt = async (candidates: Repo[]): Promise<Repo[]> => {
   const indent =
     Math.max(...candidates.map((repo) => repo.full_name.length)) +
     forkSymbol.length +
     1;
+
   const result = await inquirer.prompt<{ repositories: Repo[] }>([
     {
       type: "checkbox",
       name: "repositories",
       message: "Choose repositories to organize.",
       choices: candidates.map((c) => {
-        const base = ` ${c.full_name}${c.fork ? forkSymbol : ""}`;
-        const space = " ".repeat(indent - base.length);
-        const counts = `(star: ${c.stargazers_count}, open: ${c.open_issues_count})`;
         return {
-          name: ` ${base}${space}${counts}`,
+          name: repoText(c, indent),
           value: c,
           short: c.name,
         };
