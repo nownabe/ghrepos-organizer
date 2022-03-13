@@ -13,6 +13,91 @@ type Filter = {
 
 type FilterFunc = (repo: Repo) => boolean;
 
+const filterQuestions: inquirer.QuestionCollection<Filter> = [
+  {
+    type: "list",
+    name: "visibility",
+    message: "Filter by visibility?",
+    choices: [
+      { name: "No", value: null },
+      { name: "Only show public repositories", value: "public" },
+      { name: "Only show private repositories", value: "private" },
+    ],
+    default: null,
+  },
+  {
+    type: "list",
+    name: "fork",
+    message: "Filter by fork or not?",
+    choices: [
+      { name: "No", value: null },
+      { name: "Only show fork repositories", value: true },
+      { name: "Only show non-fork repositories", value: false },
+    ],
+    default: null,
+  },
+  {
+    type: "list",
+    name: "archived",
+    message: "Filter by archived or not?",
+    choices: [
+      { name: "No", value: null },
+      { name: "Only show archived repositories", value: true },
+      { name: "Only show not archived repositories", value: false },
+    ],
+    default: null,
+  },
+  {
+    type: "list",
+    name: "open_issues_count",
+    message: "Filter by open issue count?",
+    choices: [
+      { name: "No", value: null },
+      {
+        name: "Only show respositories which have no open issues",
+        value: true,
+      },
+      { name: "Only show repositories which have open issues", value: false },
+    ],
+    default: null,
+  },
+];
+
+const buildFilterFunc =
+  (filter: Filter): FilterFunc =>
+  (repo: Repo): boolean => {
+    if (
+      ["visibility", "fork", "archived"].some((k) => {
+        if (filter[k] !== null && repo[k] !== filter[k]) {
+          console.log(repo.full_name, k, filter[k], repo[k]);
+        }
+        return filter[k] !== null && repo[k] !== filter[k];
+      })
+    ) {
+      return false;
+    }
+
+    if (filter.open_issues_count !== null) {
+      if (filter.open_issues_count && repo.open_issues_count !== 0) {
+        console.log(
+          repo.full_name,
+          filter.open_issues_count,
+          repo.open_issues_count
+        );
+        return false;
+      } else if (!filter.open_issues_count && repo.open_issues_count === 0) {
+        console.log(
+          repo.full_name,
+          filter.open_issues_count,
+          repo.open_issues_count
+        );
+        return false;
+      }
+    }
+
+    return true;
+  };
+
 const filterPrompt = async (): Promise<FilterFunc> => {
   const useFilter = await inquirer.prompt<{ useFilter: boolean }>([
     {
@@ -27,83 +112,10 @@ const filterPrompt = async (): Promise<FilterFunc> => {
     return (_repo: Repo) => true;
   }
 
-  const filter = await inquirer.prompt<Filter>([
-    {
-      type: "list",
-      name: "visibility",
-      message: "Filter by visibility?",
-      choices: [
-        { name: "No", value: null },
-        { name: "Only show public repositories", value: "public" },
-        { name: "Only show private repositories", value: "private" },
-      ],
-      default: null,
-    },
-    {
-      type: "list",
-      name: "fork",
-      message: "Filter by fork or not?",
-      choices: [
-        { name: "No", value: null },
-        { name: "Only show fork repositories", value: true },
-        { name: "Only show non-fork repositories", value: false },
-      ],
-      default: null,
-    },
-    {
-      type: "list",
-      name: "archived",
-      message: "Filter by archived or not?",
-      choices: [
-        { name: "No", value: null },
-        { name: "Only show archived repositories", value: true },
-        { name: "Only show not archived repositories", value: false },
-      ],
-      default: null,
-    },
-    {
-      type: "list",
-      name: "open_issue_count",
-      message: "Filter by open issue count?",
-      choices: [
-        { name: "No", value: null },
-        {
-          name: "Only show respositories which have no open issues",
-          value: true,
-        },
-        { name: "Only show repositories which have open issues", value: false },
-      ],
-      default: null,
-    },
-  ]);
+  const filter = await inquirer.prompt<Filter>(filterQuestions);
+  console.log(filter);
 
-  const filterFunc = (repo: Repo): boolean => {
-    let ok = true;
-
-    if (filter.visibility !== null) {
-      ok &&= repo.visibility === filter.visibility;
-    }
-
-    if (filter.fork !== null) {
-      ok &&= repo.fork === filter.fork;
-    }
-
-    if (filter.archived !== null) {
-      ok &&= repo.archived === filter.archived;
-    }
-
-    if (filter.open_issues_count !== null) {
-      if (filter.open_issues_count) {
-        ok &&= repo.open_issues_count === 0;
-      } else {
-        ok &&= repo.open_issues_count !== 0;
-      }
-    }
-
-    return ok;
-  };
-
-  return filterFunc;
+  return buildFilterFunc(filter);
 };
 
 const getCandidates = async (
@@ -135,7 +147,7 @@ const getCandidates = async (
 
 const forkSymbol = " [fork]";
 
-const reposPrompt_ = async (candidates: Repo[]): Promise<Repo[]> => {
+const chooseReposPrompt = async (candidates: Repo[]): Promise<Repo[]> => {
   const indent =
     Math.max(...candidates.map((repo) => repo.full_name.length)) +
     forkSymbol.length +
@@ -169,7 +181,7 @@ const reposPrompt = async (octokit: Octokit, actions: Actions) => {
     return [];
   }
 
-  return await reposPrompt_(candidates);
+  return await chooseReposPrompt(candidates);
 };
 
 export default reposPrompt;
