@@ -100,7 +100,6 @@ const filterPrompt = async (): Promise<FilterFunc> => {
   }
 
   const filter = await inquirer.prompt<Filter>(filterQuestions);
-  console.log(filter);
 
   return buildFilterFunc(filter);
 };
