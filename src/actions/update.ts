@@ -2,12 +2,15 @@ import inquirer from "inquirer";
 
 import type { ActionBuilder } from ".";
 
-type Parameter =
-  | "visibility"
-  | "has_projects"
-  | "has_wiki"
-  | "delete_branch_on_merge"
-  | "archived";
+const parameters = [
+  "visibility",
+  "has_projects",
+  "has_wiki",
+  "delete_branch_on_merge",
+  "archived",
+] as const;
+
+type Parameter = typeof parameters[number];
 
 type UpdateOptions = {
   parametersToChange: Parameter[];
@@ -16,14 +19,6 @@ type UpdateOptions = {
   has_wiki: boolean;
   delete_branch_on_merge: boolean;
 };
-
-const parameters: Parameter[] = [
-  "visibility",
-  "has_projects",
-  "has_wiki",
-  "delete_branch_on_merge",
-  "archived",
-];
 
 const parameterChoices = [
   {
