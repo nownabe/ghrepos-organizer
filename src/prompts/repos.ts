@@ -67,30 +67,17 @@ const buildFilterFunc =
   (filter: Filter): FilterFunc =>
   (repo: Repo): boolean => {
     if (
-      ["visibility", "fork", "archived"].some((k) => {
-        if (filter[k] !== null && repo[k] !== filter[k]) {
-          console.log(repo.full_name, k, filter[k], repo[k]);
-        }
-        return filter[k] !== null && repo[k] !== filter[k];
-      })
+      ["visibility", "fork", "archived"].some(
+        (k) => filter[k] !== null && repo[k] !== filter[k]
+      )
     ) {
       return false;
     }
 
     if (filter.open_issues_count !== null) {
       if (filter.open_issues_count && repo.open_issues_count !== 0) {
-        console.log(
-          repo.full_name,
-          filter.open_issues_count,
-          repo.open_issues_count
-        );
         return false;
       } else if (!filter.open_issues_count && repo.open_issues_count === 0) {
-        console.log(
-          repo.full_name,
-          filter.open_issues_count,
-          repo.open_issues_count
-        );
         return false;
       }
     }
