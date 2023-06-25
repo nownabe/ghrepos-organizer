@@ -31,7 +31,7 @@
     "@rollup/plugin-typescript": "8.5.0",
     "@types/cli-spinner": "0.2.1",
     "@types/inquirer": "8.2.6",
-    "@types/node": "17.0.21",
+    "@types/node": "17.0.45",
     "@typescript-eslint/eslint-plugin": "5.59.11",
     "@typescript-eslint/parser": "5.59.11",
     "eslint": "8.43.0",
